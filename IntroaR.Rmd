@@ -103,7 +103,8 @@ iris%>% ggplot(aes(x= Petal.Width, y= Petal.Length)) + geom_point() + geom_smoot
 
 Con un 95% de confianza se acepta los valores de $\beta:0$ y $\beta:1$. Cuando no existe medida del ancho del petalo, la medida del largo es de 1.08 mm (biologicamente no es posible). Por cada 2.22mm de cambio en el largo del petalo el ancho cambia en 1 mm. 
 
-### Actividad 
+### Actividad/Deber
+## T5_RPenguins
 Replica de la regresion lineal en la data de palmerpenguis.
 ```{r actividad}
 library(palmerpenguins)

@@ -1,0 +1,87 @@
+---
+title: "introduccion a R"
+author: "David Calderon"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{bash}
+touch hola.R
+```
+###Introduccion a R
+#se revisara los fundamentos de R
+```{r}
+
+```
+##vectores
+```{r dormire}
+Hdormir<- c(8, 6, 4, 3, 5, 10)
+Hdormir[1]
+#para buscar el valor la lista
+
+```
+```{r}
+nombres <- (" Moises", "Mika, Doria, Ranier, Emily, Henry " )
+```
+##listas
+```{r}
+list(nombre=nombres,
+     horas=Hdormir)
+Hdormir$horas[2]
+```
+```{r tablas}
+data.frame(rbind(nombres, dormirH ))
+df_dormir
+```
+
+```{r leer externos}
+gbtem <- read.csv("nombre.csv",header = TRUE, sep ",")
+head(gbtemp, 3)
+#TRUE si tiene encabezado, sep=sepracion
+```
+###exploracion
+```{r explor_gbtemp}
+str(gbtemp)
+
+```
+
+```{r summary_bgtemp}
+summary(gbtemp)
+```
+##analisis
+###comparacion de prueba de hipotesis
+$H_0: \mu_w = \mu_su = \
+```{r gbtemp hipotesis}
+gbtemp$SEASON<- as.factor(gbtemp$$SEASON)
+str(gbtemp)
+```
+```{r}
+library(dplyr)
+#agrupa la data y calcula la media
+#%>% CONCATENA
+gbtemp%>%group_by(SEASON)%>%
+   summarise(mean_meas = mean(MEASUREMENT))
+```
+
+##analisis de varianzas (aov, ANOVA)
+```{r}
+summary(aov(MEASUREMENT~))
+```
+##ANAlisis posterior del anova
+#SABER LA DIFERENCIA ESPECIFICA
+```{r post_gbtemp}
+aov_gbtemp <- anova(lm(MASUREMENT~SEASON,
+                       data = gbtemp))
+TurkeyHSD(aov_gbtemp, ordered = "SEASON")
+
+```
+
+```{r visual}
+library(ggplot2)
+gbtemp %>%ggplot(aes(x=SEASON, y = MEASUREMENT, color= SEASON)) +
+geom_boxplot() +theme
+```
+

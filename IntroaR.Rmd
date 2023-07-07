@@ -1,0 +1,129 @@
+---
+title: "Introduccion a R"
+author: "William Calderon"
+date: "2023-07-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+### Introduccion a R
+
+#Se revisara los fundamentos de R
+## Vectores
+```{r dormirH}
+dormirH <- c(8, 6, 4, 3, 5, 10)
+dormirH [1:6]
+mean(dormirH)
+sd (dormirH)
+nombres <- c("Moises", "Mika", "Dorian", "Rani", "Emily", "Henry")
+nombres [2]
+```
+## Hacer listas
+```{r lista}
+Hdormir = list(nombre = nombres,
+               horas = dormirH)
+Hdormir$nombre
+Hdormir$horas
+```
+## DataFrame: tablas
+```{r tablas}
+df_dormir <- data.frame(cbind(nombres, dormirH))
+df_dormir
+```
+## Lectura de datos externos
+```{r leerExter}
+gbtemp <- read.csv("data/gbtemp.csv", header = TRUE, sep = ",")
+head(gbtemp, 3)
+
+```
+### Exploracion de archivos
+
+```{r explor_gbtemp}
+str(gbtemp)
+```
+
+
+```{r summary_gbtemp}
+summary(gbtemp)
+```
+## Analisis de datos
+### Comparacion (prueba de hipotesis)
+$H_0: \mu_w = \mu_su = \mu_sp = \mu_f$ No existe diferentcia en las medidas asociado a la temporada 
+$H_a: \mu_w \neq \neq \mu_su \neq \mu_sp \neq \mu_f$
+```{r gbtemp_hipotesis}
+gbtemp$SEASON <- factor(gbtemp$SEASON)
+
+library(dplyr)
+gbtemp %>% group_by(SEASON) %>% summarise(mean_meas = mean(MEASUREMENT))
+```
+### Analisis de varianzas (AOV, ANOVA)
+```{r aov}
+summary(aov(MEASUREMENT ~ SEASON, data =gbtemp))
+```
+con una confianza del 95% existe diferencias de la medida en al menos una de las estaciones. h_a
+##### Analisis posterior (ANOVA)
+```{r post_gbtemp}
+aov_gbtemp <- aov(MEASUREMENT ~ SEASON, data =gbtemp)
+
+TukeyHSD(aov_gbtemp, "SEASON")
+```
+```{r visual}
+library(ggplot2)
+
+gbtemp %>% ggplot(aes(x= SEASON, y= MEASUREMENT, color= SEASON)) + geom_boxplot() + theme_classic()
+
+```
+### Analisis de regresion: efectos
+$H_0: \beta_1 = 0 $ No hay cambio del largo del sepalo debido al ancho del setalo.
+$H_a: \beta_1 \neq 0$ Existe cambio del largo del sepalo debido al ancho del sepalo.
+```{r lm}
+head(iris)
+irislm = lm(Sepal.Length ~ Sepal.Width, data = iris)
+summary(irislm)
+```
+```{r iris}
+plot(x= iris$Sepal.Width, y= iris$Sepal.Length)
+```
+
+```{r petal_lm}
+plot(x= iris$Petal.Width, y= iris$Petal.Length)
+
+irislm = lm(Petal.Length ~ Petal.Width, data = iris)
+summary(irislm)
+```
+```{r vis_iris}
+library(ggplot2)
+iris%>% ggplot(aes(x= Petal.Width, y= Petal.Length)) + geom_point() + geom_smooth(method = "lm") + theme_dark() + facet_grid(Species~., scales = "free")
+```
+
+Con un 95% de confianza se acepta los valores de $\beta:0$ y $\beta:1$. Cuando no existe medida del ancho del petalo, la medida del largo es de 1.08 mm (biologicamente no es posible). Por cada 2.22mm de cambio en el largo del petalo el ancho cambia en 1 mm. 
+
+### Actividad 
+Replica de la regresion lineal en la data de palmerpenguis.
+```{r actividad}
+library(palmerpenguins)
+#data(package = 'palmerpenguis')
+
+plot(x= penguins$flipper_length_mm, y= penguins$body_mass_g)
+
+penguislm = lm(flipper_length_mm ~ body_mass_g, data = penguins)
+summary(penguislm)
+```
+$H_o: \beta_1 = 0 $ No hay cambio de la aleta con respecto al peso corporal.
+$H_a: \beta_1 \neq 0$ Si hay cambio de la aleta por el peso corporal.
+
+```{r vis_penguins}
+library(ggplot2)
+#llamo a la libreria 
+penguins%>% ggplot(aes(x= body_mass_g, y= flipper_length_mm)) + geom_point() + geom_smooth(method = "lm") + theme_classic()
+```
+
+Con un 95% de confianza se aceptan los valores de $\beta:0$ y $\beta:1$. 
+Cuando no se tiene una la longuitud de la aleta, la medida del la masa corporal cambia en $1.367e^2$. Por cada $1.528e^-2$ mm de cambio en la longuitud de la aleta la masa corporal cambia en $1.367e^2$.
+
+$$ PL = 1.367e^2 + 1.528e^-2 \cdot PW + \epsilon$$ 

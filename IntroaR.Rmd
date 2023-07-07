@@ -128,3 +128,4 @@ Con un 95% de confianza se aceptan los valores de $\beta:0$ y $\beta:1$.
 Cuando no se tiene una la longuitud de la aleta, la medida del la masa corporal cambia en $1.367e^2$. Por cada $1.528e^-2$ mm de cambio en la longuitud de la aleta la masa corporal cambia en $1.367e^2$.
 
 $$ PL = 1.367e^2 + 1.528e^-2 \cdot PW + \epsilon$$ 
+
